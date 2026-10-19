@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { IntroLoader } from "@/components/motion/IntroLoader";
 import { HeroVideo } from "@/components/motion/HeroVideo";
-import { Countdown } from "@/components/motion/Countdown";
+import { IntroLoader } from "@/components/motion/IntroLoader";
+import { ReplayHero } from "@/components/motion/ReplayHero";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { event, registrationHref } from "@/lib/site";
 
@@ -22,7 +22,7 @@ export function Hero() {
           <ButtonLink href="#about" variant="light">Explore the event</ButtonLink>
         </div>
       </div>
-      <Countdown startAt={event.startAt} />
+      <ReplayHero />
       <span className="hero-index" aria-hidden="true">604 / BUILD</span>
     </section>
   );

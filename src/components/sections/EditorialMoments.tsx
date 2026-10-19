@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, type MotionStyle } from "motion/react";
+import { useRef, useState } from "react";
+import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionStyle } from "motion/react";
 import { HeroVideo } from "@/components/motion/HeroVideo";
 
 const tiles = [
@@ -13,12 +13,31 @@ const tiles = [
   { image: "/assets/collage-community.webp", className: "feedback-tile feedback-tile--five" },
 ];
 
+const executionBeats = [
+  { title: <>Execution is free.<br /><em>Judgment is everything.</em></>, description: "Make something small enough to test and strong enough to start a conversation." },
+  { title: <>Build quickly.<br /><em>Test honestly.</em></>, description: "Put an early version in front of people and pay attention to what happens." },
+  { title: <>Show the work.<br /><em>Share what you learned.</em></>, description: "The final demo is more than a pitch: it is evidence, decisions, and a next step." },
+];
+
 export function EditorialMoments() {
   const feedbackRef = useRef<HTMLElement>(null);
+  const executionRef = useRef<HTMLElement>(null);
   const finaleRef = useRef<HTMLElement>(null);
+  const [executionBeat, setExecutionBeat] = useState(0);
   const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: feedbackRef, offset: ["start end", "end start"] });
-  const { scrollYProgress: finaleProgress } = useScroll({ target: finaleRef, offset: ["start end", "end start"] });
+  const { scrollYProgress: feedbackProgress } = useScroll({ target: feedbackRef, offset: ["start start", "end end"] });
+  const { scrollYProgress: executionProgress } = useScroll({ target: executionRef, offset: ["start start", "end end"] });
+  const { scrollYProgress: finaleProgress } = useScroll({ target: finaleRef, offset: ["start start", "end end"] });
+  const feedbackHeadingX = useTransform(feedbackProgress, [0, 0.5, 1], [180, 0, -180]);
+  const feedbackHeadingScale = useTransform(feedbackProgress, [0, 0.5, 1], [0.86, 1, 0.86]);
+  const executionImageScale = useTransform(executionProgress, [0, 1], [1.25, 1]);
+  const executionImageY = useTransform(executionProgress, [0, 1], [48, -48]);
+  const executionCopyY = useTransform(executionProgress, [0, 1], [52, -52]);
+  const finaleCopyScale = useTransform(finaleProgress, [0, 0.5, 1], [0.86, 1, 0.92]);
+
+  useMotionValueEvent(executionProgress, "change", (value) => {
+    setExecutionBeat(Math.min(executionBeats.length - 1, Math.floor(value * executionBeats.length)));
+  });
 
   return (
     <>
@@ -34,23 +53,40 @@ export function EditorialMoments() {
       </section>
 
       <section className="feedback-wall" ref={feedbackRef} aria-labelledby="feedback-title">
-        <motion.div className="feedback-wall__stage" style={{ "--feedback-progress": reduceMotion ? 0.5 : scrollYProgress } as MotionStyle}>
+        <motion.div className="feedback-wall__stage" style={{ "--feedback-progress": reduceMotion ? 0.5 : feedbackProgress } as MotionStyle}>
           <div className="feedback-wall__images" aria-hidden="true">
             {tiles.map((tile) => <div className={tile.className} key={tile.image}><Image src={tile.image} alt="" fill sizes="20vw" /></div>)}
           </div>
-          <h2 id="feedback-title">Feedback<br />that feels<br />human.</h2>
+          <div className="feedback-wall__title">
+            <motion.h2 id="feedback-title" style={{ x: reduceMotion ? 0 : feedbackHeadingX, scale: reduceMotion ? 1 : feedbackHeadingScale }}>Feedback<br />that feels<br />human.</motion.h2>
+          </div>
           <p>Build, share, listen, and build again.</p>
         </motion.div>
       </section>
 
-      <section className="execution-banner" aria-labelledby="execution-title">
-        <Image src="/assets/workspace.png" alt="An editorial workspace with books, art materials, and a laptop" fill sizes="100vw" />
-        <div>
+      <section className="execution-story" ref={executionRef} aria-label="A prototype takes shape">
+        <motion.div className="execution-banner" style={{ "--execution-progress": reduceMotion ? 0.5 : executionProgress } as MotionStyle}>
+          <motion.div className="execution-banner__art" style={{ scale: reduceMotion ? 1 : executionImageScale, y: reduceMotion ? 0 : executionImageY }}>
+            <Image src="/assets/execution-balance.png" alt="A Renaissance balance scale held between two hands" fill sizes="100vw" />
+          </motion.div>
+          <motion.div className="execution-banner__copy" style={{ y: reduceMotion ? 0 : executionCopyY }}>
+          <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            className="execution-banner__message"
+            key={executionBeat}
+            initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? undefined : { opacity: 0, y: -12 }}
+            transition={{ duration: reduceMotion ? 0 : 0.24 }}
+          >
           <p className="section-kicker">FROM IDEA TO EVIDENCE</p>
-          <h2 id="execution-title">Execution is free.<br /><em>Judgment is everything.</em></h2>
-          <p>Make something small enough to test and strong enough to start a conversation.</p>
+          <h2 id="execution-title">{executionBeats[executionBeat].title}</h2>
+          <p>{executionBeats[executionBeat].description}</p>
+          </motion.div>
+          </AnimatePresence>
           <a className="button button-light" href="#schedule">Explore the format ↗</a>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       <section className="network-finale" ref={finaleRef} aria-labelledby="network-finale-title">
@@ -59,20 +95,19 @@ export function EditorialMoments() {
           <div className="network-finale__tile network-finale__tile--two"><Image src="/assets/collage-reader.webp" alt="" fill sizes="25vw" /></div>
           <div className="network-finale__tile network-finale__tile--three"><Image src="/assets/collage-maker.webp" alt="" fill sizes="25vw" /></div>
           <div className="network-finale__tile network-finale__tile--four"><Image src="/assets/collage-seated.webp" alt="" fill sizes="25vw" /></div>
-          <div className="network-finale__copy">
+          <div className="network-finale__tile network-finale__tile--five"><Image src="/assets/collage-hands.webp" alt="" fill sizes="18vw" /></div>
+          <div className="network-finale__tile network-finale__tile--six"><Image src="/assets/flat-hack-signal-poster.webp" alt="" fill sizes="18vw" /></div>
+          <div className="network-finale__layout">
+            <motion.div className="network-finale__copy" style={{ scale: reduceMotion ? 1 : finaleCopyScale }}>
             <p className="section-kicker">THE PEOPLE MAKE THE PLACE</p>
             <h2 id="network-finale-title">The network for creative possibility.</h2>
             <p>Find collaborators, exchange perspective, and build a first version together.</p>
             <a className="button button-dark" href="#register">Join Flat Hack 604 ↗</a>
+            </motion.div>
           </div>
         </motion.div>
       </section>
 
-      <section className="editorial-mosaic" aria-label="A moving gallery of Flat Hack inspiration">
-        <div className="editorial-mosaic__row">
-          {["/assets/collage-maker.webp", "/assets/collage-reader.webp", "/assets/collage-seated.webp", "/assets/collage-explorer.webp", "/assets/collage-community.webp"].map((source) => <div key={source}><Image src={source} alt="" fill sizes="20vw" /></div>)}
-        </div>
-      </section>
     </>
   );
 }

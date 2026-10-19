@@ -25,8 +25,15 @@ describe("Flat Hack 604 homepage", () => {
     expect(screen.getByRole("heading", { name: /feedback.*that feels.*human/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /useful questions/i })).toBeInTheDocument();
     expect(screen.getByText("Registration opens soon")).toHaveAttribute("aria-disabled", "true");
-    expect(document.querySelector("video source")).toHaveAttribute("src", "/assets/flat-hack-hero-branded.webm");
+    expect(document.querySelector("video source")).toHaveAttribute("src", "/assets/contra-hero-original.webm");
     expect(screen.getAllByAltText("Flat Hack 604").length).toBeGreaterThan(0);
+    expect(Array.from(document.querySelectorAll(".track-row img"), (image) => image.getAttribute("src"))).toEqual([
+      "/assets/track-creative-arena.png",
+      "/assets/track-benchmarking.png",
+      "/assets/track-creative-preference.png",
+      "/assets/track-trajectories.png",
+    ]);
+    expect(screen.getByRole("navigation", { name: "Footer navigation" })).toBeInTheDocument();
   });
 
   it("uses in-page navigation targets", () => {
@@ -39,6 +46,18 @@ describe("Flat Hack 604 homepage", () => {
     expect(navigation.getByRole("link", { name: "FAQ" })).toHaveAttribute("href", "#faq");
   });
 
+  it("reveals a hackathon brief from each track card", () => {
+    render(<Home />);
+    const card = screen.getByRole("button", { name: /useful systems/i });
+
+    expect(card).toHaveAttribute("aria-expanded", "false");
+    fireEvent.click(card);
+    expect(card).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText(/find one frustrating workflow/i)).toBeInTheDocument();
+    fireEvent.click(card);
+    expect(card).toHaveAttribute("aria-expanded", "false");
+  });
+
   it("opens and closes the mobile navigation", () => {
     render(<Home />);
     const toggle = screen.getByRole("button", { name: "Open navigation" });
@@ -49,14 +68,23 @@ describe("Flat Hack 604 homepage", () => {
     expect(screen.getByRole("button", { name: "Open navigation" })).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("lets visitors skip and replay the opening sequence", () => {
+  it("plays the opening animation on page load and lets visitors replay it", () => {
     render(<Home />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Skip intro" }));
+    const intro = screen.getByRole("dialog", { name: "Flat Hack 604 opening animation" });
+    expect(intro.querySelectorAll(".intro-frame")).toHaveLength(10);
+    expect(intro.querySelector(".intro-frame--final")).toHaveAttribute("src", "/assets/flat-hack-hero-poster.webp");
     expect(screen.queryByRole("button", { name: "Skip intro" })).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Replay opening animation" }));
-    expect(screen.getByRole("button", { name: "Skip intro" })).toBeInTheDocument();
+    const replay = screen.getByRole("button", { name: "Replay opening animation" });
+    expect(replay).toHaveTextContent("Replay intro");
+
+    const replayEvent = vi.fn();
+    window.addEventListener("flat-hack-replay", replayEvent);
+    fireEvent.click(replay);
+    expect(replayEvent).toHaveBeenCalledOnce();
+    expect(screen.getByRole("dialog", { name: "Flat Hack 604 opening animation" })).toBeInTheDocument();
+    window.removeEventListener("flat-hack-replay", replayEvent);
   });
 
   it("contains no legacy brand references", () => {

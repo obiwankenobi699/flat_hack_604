@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 export function HeroVideo({
-  src = "/assets/flat-hack-hero-branded.webm",
+  src = "/assets/contra-hero-original.webm",
   poster = "/assets/flat-hack-hero-poster.webp",
 }: {
   src?: string;
@@ -29,20 +29,24 @@ export function HeroVideo({
         void video.play().catch(() => undefined);
       }
     };
-    const replay = () => {
+    const holdAtOpeningFrame = () => {
       video.currentTime = 0;
-      syncPlayback();
+      video.pause();
     };
 
     observer.observe(video);
     document.addEventListener("visibilitychange", syncPlayback);
     motionPreference.addEventListener("change", syncPlayback);
-    window.addEventListener("flat-hack-replay", replay);
+    window.addEventListener("flat-hack-replay", holdAtOpeningFrame);
+    window.addEventListener("flat-hack-hero-hold", holdAtOpeningFrame);
+    window.addEventListener("flat-hack-hero-resume", syncPlayback);
     return () => {
       observer.disconnect();
       document.removeEventListener("visibilitychange", syncPlayback);
       motionPreference.removeEventListener("change", syncPlayback);
-      window.removeEventListener("flat-hack-replay", replay);
+      window.removeEventListener("flat-hack-replay", holdAtOpeningFrame);
+      window.removeEventListener("flat-hack-hero-hold", holdAtOpeningFrame);
+      window.removeEventListener("flat-hack-hero-resume", syncPlayback);
     };
   }, []);
 
