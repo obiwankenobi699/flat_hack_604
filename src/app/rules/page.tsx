@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
 import { DetailPage } from "@/components/layout/DetailPage";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Competition rules", description: "Eligibility, revenue verification, prize, deliverables, and conduct rules for Flat Hack 605." };
+export const metadata = pageMetadata("Competition rules", "Eligibility, revenue verification, prize, deliverables, and conduct rules for Flat Hack 605.", "/rules");
 
 const rules = [
   ["Eligibility and teams", ["Every participant must be at least 18 years old.", "Teams consist of exactly two members.", "Five teams are selected through applications and one is an organizer wildcard.", "All teams, including the wildcard, follow the same competition rules."]],

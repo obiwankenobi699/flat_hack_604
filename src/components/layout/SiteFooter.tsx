@@ -31,12 +31,12 @@ export function SiteFooter() {
           {routeLinks.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}
           {contact && <a href={contact}>Contact organizers</a>}
         </nav>
+        {socials.length > 0 && <nav className="site-footer__socials" aria-label="Official social links"><p className="site-footer__label">FOLLOW</p>{socials.map(([label, href]) => <a href={href} key={label} target="_blank" rel="noopener noreferrer">{label === "x" ? "X" : label} ↗</a>)}</nav>}
         <div className="site-footer__action">
           <p className="site-footer__label">BUILD. LAUNCH. EARN.</p>
           {application ? <a className="site-footer__primary" href={application} target="_blank" rel="noopener noreferrer">Apply to Flat Hack 605 ↗</a> : <Link className="site-footer__primary is-disabled" href="/apply">Read the application guide →</Link>}
           {sponsor ? <a className="site-footer__secondary" href={sponsor} target="_blank" rel="noopener noreferrer">Become a founding sponsor ↗</a> : <Link className="site-footer__secondary" href="/sponsors">Explore sponsorship</Link>}
           {sponsorEmail && <a href={sponsorEmail}>Email the sponsor team</a>}
-          {socials.length > 0 && <div className="site-footer__socials" aria-label="Official social links">{socials.map(([label, href]) => <a href={href} key={label} target="_blank" rel="noopener noreferrer">{label}</a>)}</div>}
         </div>
       </div>
       <div className="site-footer__bottom">

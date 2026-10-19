@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
 import { DetailPage } from "@/components/layout/DetailPage";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { applicationSections } from "@/content/home";
-import { event, externalHref } from "@/lib/site";
+import { event, externalHref, pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Apply", description: "Eligibility, selection, dates, and every application question for Flat Hack 605." };
+export const metadata = pageMetadata("Apply", "Eligibility, selection, dates, and every application question for Flat Hack 605.", "/apply");
 
 export default function ApplyPage() {
   const application = externalHref(event.applicationUrl);

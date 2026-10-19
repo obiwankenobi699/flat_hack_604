@@ -10,7 +10,8 @@ import SponsorsPage from "@/app/sponsors/page";
 import PrivacyPage from "@/app/privacy/page";
 import { Countdown, timeUntil } from "@/components/motion/Countdown";
 import { ButtonLink } from "@/components/ui/ButtonLink";
-import { emailHref, eventStatus, externalHref } from "@/lib/site";
+import { emailHref, eventStatus, externalHref, pageMetadata } from "@/lib/site";
+import nextConfig from "../next.config";
 
 vi.mock("next/image", () => ({
   default: ({ alt, fill: _fill, priority: _priority, ...props }: React.ImgHTMLAttributes<HTMLImageElement> & { fill?: boolean; priority?: boolean }) => {
@@ -32,6 +33,15 @@ describe("Flat Hack 605 website", () => {
     expect(screen.getByAltText(/shared worktable inside flat 605/i)).toHaveAttribute("src", "/assets/flat-605-worktable.webp");
     expect(screen.getByAltText(/exterior view near the flat 605 event venue/i)).toHaveAttribute("src", "/assets/flat-605-exterior.webp");
     expect(screen.getAllByText("Application link coming soon")[0]).toHaveAttribute("aria-disabled", "true");
+    const socialNavigation = within(screen.getByRole("navigation", { name: "Official social links" }));
+    expect(socialNavigation.getByRole("link", { name: /instagram/i })).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/moneybhai.hq/",
+    );
+    expect(socialNavigation.getByRole("link", { name: /^x/i })).toHaveAttribute(
+      "href",
+      "https://x.com/askmoneybhai",
+    );
     expect(container.textContent).not.toMatch(/Flat Hack 604|Contra Labs/i);
   });
 
@@ -99,6 +109,27 @@ describe("Flat Hack 605 website", () => {
     expect(externalHref("javascript:alert(1)")).toBeNull();
     expect(emailHref("team@example.com")).toBe("mailto:team@example.com");
     expect(emailHref("not-an-email")).toBeNull();
+  });
+
+  it("publishes route-specific SEO metadata", () => {
+    const metadata = pageMetadata("Apply", "Apply to the event.", "/apply");
+    expect(metadata.alternates).toEqual({ canonical: "/apply" });
+    expect(metadata.openGraph).toMatchObject({
+      title: "Apply — Flat Hack 605",
+      description: "Apply to the event.",
+      url: "/apply",
+    });
+    expect(metadata.twitter).toMatchObject({ title: "Apply — Flat Hack 605" });
+  });
+
+  it("configures browser security headers", async () => {
+    const routes = await nextConfig.headers?.();
+    const headers = Object.fromEntries((routes?.[0]?.headers ?? []).map(({ key, value }) => [key, value]));
+    expect(headers["Content-Security-Policy"]).toContain("frame-ancestors 'none'");
+    expect(headers["Permissions-Policy"]).toContain("camera=()");
+    expect(headers["Referrer-Policy"]).toBe("strict-origin-when-cross-origin");
+    expect(headers["X-Content-Type-Options"]).toBe("nosniff");
+    expect(headers["X-Frame-Options"]).toBe("DENY");
   });
 
   it("hydrates time-dependent UI without changing the initial server markup", async () => {

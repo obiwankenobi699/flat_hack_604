@@ -1,8 +1,7 @@
-import type { Metadata } from "next";
 import { DetailPage } from "@/components/layout/DetailPage";
-import { event, emailHref } from "@/lib/site";
+import { event, emailHref, pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Privacy notice", description: "Interim website privacy notice for Flat Hack 605." };
+export const metadata = pageMetadata("Privacy notice", "Interim website privacy notice for Flat Hack 605.", "/privacy");
 
 export default function PrivacyPage() {
   const contact = emailHref(event.contactEmail);

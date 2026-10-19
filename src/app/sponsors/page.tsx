@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
 import { DetailPage } from "@/components/layout/DetailPage";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { sponsorships } from "@/content/home";
-import { event, emailHref, externalHref } from "@/lib/site";
+import { event, emailHref, externalHref, pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Sponsors", description: "Founding partnership opportunities for Flat Hack 605." };
+export const metadata = pageMetadata("Sponsors", "Founding partnership opportunities for Flat Hack 605.", "/sponsors");
 
 export default function SponsorsPage() {
   const sponsor = externalHref(event.sponsorUrl);

@@ -1,9 +1,24 @@
+import type { Metadata } from "next";
+
 export const site = {
   name: "Flat Hack 605",
   title: "Flat Hack 605 — Build. Launch. Earn.",
   description: "A 32-hour livestreamed hackathon where six experienced teams build, launch, and race to earn their first $100 in verified product revenue.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
 };
+
+export function pageMetadata(title: string, description: string, path: `/${string}`): Metadata {
+  const resolvedTitle = `${title} — ${site.name}`;
+  const image = { url: "/opengraph-image", width: 1200, height: 630, alt: `${site.name} — 32 hours, 6 teams, one flat` };
+
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: { title: resolvedTitle, description, type: "website", siteName: site.name, url: path, images: [image] },
+    twitter: { card: "summary_large_image", title: resolvedTitle, description, images: [image.url] },
+  };
+}
 
 export const event = {
   applicationDeadline: "2026-10-22T23:59:00+05:30",
@@ -18,8 +33,8 @@ export const event = {
   livestreamUrl: process.env.NEXT_PUBLIC_LIVESTREAM_URL ?? "",
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "",
   socials: {
-    instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL ?? "",
-    x: process.env.NEXT_PUBLIC_X_URL ?? "",
+    instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://www.instagram.com/moneybhai.hq/",
+    x: process.env.NEXT_PUBLIC_X_URL || "https://x.com/askmoneybhai",
     youtube: process.env.NEXT_PUBLIC_YOUTUBE_URL ?? "",
     linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL ?? "",
   },
