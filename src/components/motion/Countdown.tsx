@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { eventStatus } from "@/lib/site";
 
 export function timeUntil(startAt: string, now: number): number[] | null {
   const target = Date.parse(startAt);
@@ -14,19 +15,28 @@ export function timeUntil(startAt: string, now: number): number[] | null {
   ];
 }
 
-export function Countdown({ startAt }: { startAt: string }) {
-  const [remaining, setRemaining] = useState<number[] | null>(null);
+export function Countdown() {
+  const [now, setNow] = useState<number | null>(null);
+  const status = now === null ? null : eventStatus(now);
+  const remaining = status?.target && now !== null ? timeUntil(status.target, now) : null;
 
   useEffect(() => {
-    const update = () => setRemaining(timeUntil(startAt, Date.now()));
-    update();
-    const timer = window.setInterval(update, 1000);
-    return () => window.clearInterval(timer);
-  }, [startAt]);
+    const update = () => setNow(Date.now());
+    const initialTimer = window.setTimeout(update, 0);
+    const interval = window.setInterval(update, 1000);
+    return () => {
+      window.clearTimeout(initialTimer);
+      window.clearInterval(interval);
+    };
+  }, []);
+
+  if (!status) {
+    return <div className="hero-countdown hero-countdown--pending" aria-label="Event timing"><span className="hero-countdown-label">EVENT STATUS</span><span className="hero-countdown-pending">Loading current status…</span></div>;
+  }
 
   return (
-    <div className="hero-countdown" aria-label="Time until Flat Hack 604 begins">
-      <span className="hero-countdown-label">THE HACKATHON BEGINS IN</span>
+    <div className={`hero-countdown hero-countdown--${status.phase}`} aria-label={status.label}>
+      <span className="hero-countdown-label">{status.label}</span>
       {remaining ? (
         <div className="hero-countdown-numbers" role="timer" aria-live="off">
           {remaining.map((value, index) => (
@@ -36,9 +46,7 @@ export function Countdown({ startAt }: { startAt: string }) {
             </span>
           ))}
         </div>
-      ) : (
-        <span className="hero-countdown-pending">Date to be announced</span>
-      )}
+      ) : <span className="hero-countdown-pending">{status.phase === "live" ? "32 hours in motion" : status.label}</span>}
     </div>
   );
 }

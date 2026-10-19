@@ -1,6 +1,8 @@
-# Flat Hack 604
+# Flat Hack 605
 
-A responsive, one-page hackathon site built with Next.js and local editorial artwork.
+A responsive event site for the 32-hour Flat Hack 605 product-and-revenue challenge.
+It combines documentary workspace photography with the existing editorial artwork
+and motion system.
 
 Application routes live in `src/app`, reusable page sections and UI live in
 `src/components`, and editable homepage content lives in `src/content/home.ts`.
@@ -27,4 +29,7 @@ pnpm test
 pnpm build
 ```
 
-Event dates, venue, registration URL, sponsors, and prizes are intentionally omitted until confirmed.
+Confirmed dates and competition facts live in `src/lib/site.ts`. Application,
+sponsor, livestream, contact, and social destinations remain environment-driven.
+The full address, exact GPU model, registration fee, and final payment policy stay
+unpublished until confirmed.

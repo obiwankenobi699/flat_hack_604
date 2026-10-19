@@ -5,14 +5,14 @@ import { useRef, useState } from "react";
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionStyle } from "motion/react";
 
 const chapters = [
-  { eyebrow: "01 / REAL EXPERIENCE", title: "Built on real-world creative expertise", description: "The strongest prototypes begin with lived problems and people who know them well." },
-  { eyebrow: "02 / DIFFERENT MINDS", title: "A room of practicing makers and thinkers", description: "Designers, developers, researchers, and storytellers bring different ways of seeing the same challenge." },
-  { eyebrow: "03 / SHARED MOMENTUM", title: "With ideas made to leave the room", description: "Build together, test early, and carry the best parts forward after the final demo." },
+  { eyebrow: "01 / EVIDENCE", title: "Show us what you have shipped", description: "Strong applications connect previous work to a credible product, customer, and 32-hour execution plan." },
+  { eyebrow: "02 / SELECTION", title: "Five application teams. One wildcard.", description: "Only six teams enter the flat. Shortlisted applicants interview online with both teammates present." },
+  { eyebrow: "03 / COMMITMENT", title: "Stay for the build and the business", description: "Selected teams commit to the full event, the livestream, verified payments, and every final deliverable." },
 ];
 
 const images = [
-  { src: "/assets/collage-seated.webp", className: "story-image story-image--one" },
-  { src: "/assets/collage-maker.webp", className: "story-image story-image--two" },
+  { src: "/assets/flat-605-worktable.webp", className: "story-image story-image--one" },
+  { src: "/assets/flat-605-workspace.webp", className: "story-image story-image--two" },
   { src: "/assets/collage-reader.webp", className: "story-image story-image--three" },
   { src: "/assets/collage-hands.webp", className: "story-image story-image--four" },
   { src: "/assets/collage-community.webp", className: "story-image story-image--five" },
@@ -31,9 +31,9 @@ export function ExpertiseStory() {
   });
 
   return (
-    <section className="expertise-story" ref={ref} aria-label="The people and ideas behind Flat Hack">
+    <section className="expertise-story" ref={ref} aria-label="How teams are selected">
       <motion.div className="expertise-story__sticky" style={{ "--story-progress": reduceMotion ? 0 : scrollYProgress } as MotionStyle}>
-        <span className="expertise-story__eyebrow">FLAT HACK 604 / A STORY IN THREE PARTS</span>
+        <span className="expertise-story__eyebrow">FLAT HACK 605 / HOW SELECTION WORKS</span>
         <div className="expertise-story__images" aria-hidden="true">
           {images.map((image) => (
             <div className={image.className} key={image.src}>

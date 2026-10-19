@@ -14,7 +14,7 @@ export function Manifesto() {
         <div className="manifesto-stack__sheet manifesto-stack__sheet--front">
           <span>THE FLAT HACK WAY</span>
           <p>“Make the first version. Put it in someone else’s hands. Let what you learn shape the next one.”</p>
-          <small>604 / BUILD WITH INTENTION</small>
+          <small>605 / BUILD · LAUNCH · EARN</small>
         </div>
       </Reveal>
     </section>

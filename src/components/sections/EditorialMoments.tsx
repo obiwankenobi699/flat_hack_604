@@ -84,7 +84,7 @@ export function EditorialMoments() {
           <p>{executionBeats[executionBeat].description}</p>
           </motion.div>
           </AnimatePresence>
-          <a className="button button-light" href="#schedule">Explore the format ↗</a>
+          <a className="button button-light" href="#timeline">Explore the format ↗</a>
           </motion.div>
         </motion.div>
       </section>
@@ -102,7 +102,7 @@ export function EditorialMoments() {
             <p className="section-kicker">THE PEOPLE MAKE THE PLACE</p>
             <h2 id="network-finale-title">The network for creative possibility.</h2>
             <p>Find collaborators, exchange perspective, and build a first version together.</p>
-            <a className="button button-dark" href="#register">Join Flat Hack 604 ↗</a>
+            <a className="button button-dark" href="#register">Join Flat Hack 605 ↗</a>
             </motion.div>
           </div>
         </motion.div>

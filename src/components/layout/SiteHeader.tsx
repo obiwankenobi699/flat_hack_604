@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { navigation } from "@/content/home";
 import { Brand } from "@/components/ui/Brand";
 import { ButtonLink } from "@/components/ui/ButtonLink";
-import { event, registrationHref } from "@/lib/site";
+import { event, externalHref } from "@/lib/site";
 
-export function SiteHeader() {
+export function SiteHeader({ home = true }: { home?: boolean }) {
   const [open, setOpen] = useState(false);
-  const registration = registrationHref(event.registrationUrl);
+  const application = externalHref(event.applicationUrl);
+  const sectionHref = (href: string) => home ? href : `/${href}`;
 
   useEffect(() => {
     if (!open) return;
@@ -21,11 +22,11 @@ export function SiteHeader() {
 
   return (
     <header className="site-header">
-      <a className="wordmark" href="#top" aria-label="Flat Hack 604, home"><Brand compact /></a>
+      <a className="wordmark" href={home ? "#top" : "/"} aria-label="Flat Hack 605, home"><Brand compact /></a>
       <nav className="desktop-nav" aria-label="Primary navigation">
-        {navigation.map((link) => <a href={link.href} key={link.href}>{link.label}</a>)}
+        {navigation.map((link) => <a href={sectionHref(link.href)} key={link.href}>{link.label}</a>)}
       </nav>
-      <ButtonLink className="header-cta" href={registration ?? "#register"} target={registration ? "_blank" : undefined} rel={registration ? "noopener noreferrer" : undefined}>{registration ? "Register now" : "Registration soon"}</ButtonLink>
+      <ButtonLink className="header-cta" href={application} target={application ? "_blank" : undefined} rel={application ? "noopener noreferrer" : undefined} expiresAt={event.applicationDeadline} unavailableLabel="Applications link soon">Apply now</ButtonLink>
       <button
         className="menu-button"
         type="button"
@@ -37,8 +38,8 @@ export function SiteHeader() {
         <span /><span />
       </button>
       <nav className={`mobile-nav${open ? " is-open" : ""}`} id="mobile-navigation" aria-label="Mobile navigation">
-        {navigation.map((link) => <a href={link.href} key={link.href} onClick={() => setOpen(false)}>{link.label}</a>)}
-        <a href={registration ?? "#register"} target={registration ? "_blank" : undefined} rel={registration ? "noopener noreferrer" : undefined} onClick={() => setOpen(false)}>{registration ? "Register now" : "Registration soon"}</a>
+        {navigation.map((link) => <a href={sectionHref(link.href)} key={link.href} onClick={() => setOpen(false)}>{link.label}</a>)}
+        <a href="/apply" onClick={() => setOpen(false)}>Application guide</a>
       </nav>
     </header>
   );

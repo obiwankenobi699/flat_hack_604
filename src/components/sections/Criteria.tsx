@@ -1,5 +1,5 @@
 import { Reveal } from "@/components/motion/Reveal";
-import { criteria } from "@/content/home";
+import { deliverables } from "@/content/home";
 
 export function Criteria() {
   return (
@@ -7,7 +7,7 @@ export function Criteria() {
       <Reveal>
         <div className="section-heading"><p className="section-kicker">Judging lens</p><h2 id="criteria-title">What makes a strong demo?</h2></div>
         <div className="criteria-grid">
-          {criteria.map(([title, copy], index) => (
+        {deliverables.map(([title, copy], index) => (
             <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{copy}</p></article>
           ))}
         </div>

@@ -5,7 +5,7 @@ export function Faq() {
   return (
     <section className="faq section" id="faq" aria-labelledby="faq-title">
       <Reveal className="faq-grid">
-        <div><p className="section-kicker">Before you arrive</p><h2 id="faq-title">The useful questions.</h2></div>
+        <div><p className="section-kicker">BEFORE YOU APPLY</p><h2 id="faq-title">Questions that change the decision.</h2><a className="text-link" href="/rules">Read all competition rules →</a></div>
         <div className="faq-list">
           {faqs.map(([question, answer]) => (
             <details key={question}><summary>{question}<span aria-hidden="true">+</span></summary><p>{answer}</p></details>

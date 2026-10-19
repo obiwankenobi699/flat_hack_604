@@ -5,13 +5,13 @@ import { useEffect, useRef, useState } from "react";
 
 const introFrames = [
   "/assets/intro-artwork.webp",
+  "/assets/flat-605-worktable.webp",
   "/assets/collage-seated.webp",
   "/assets/collage-reader.webp",
   "/assets/collage-explorer.webp",
-  "/assets/collage-hands.webp",
+  "/assets/flat-605-workspace.webp",
   "/assets/collage-maker.webp",
   "/assets/collage-community.webp",
-  "/assets/flat-hack-signal-poster.webp",
   "/assets/execution-balance.png",
   "/assets/flat-hack-hero-poster.webp",
 ];
@@ -20,7 +20,6 @@ export function IntroLoader() {
   const [visible, setVisible] = useState(true);
   const [exiting, setExiting] = useState(false);
   const [run, setRun] = useState(0);
-  const overlayRef = useRef<HTMLDivElement>(null);
   const wasVisible = useRef(false);
 
   useEffect(() => {
@@ -45,13 +44,13 @@ export function IntroLoader() {
       return;
     }
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const reducedMotionTimer = window.setTimeout(() => setVisible(false), 0);
+      return () => window.clearTimeout(reducedMotionTimer);
+    }
 
     wasVisible.current = true;
     window.dispatchEvent(new Event("flat-hack-hero-hold"));
-    const overlay = overlayRef.current;
-    overlay?.focus();
-
     const exitTimer = window.setTimeout(() => {
       setExiting(true);
     }, 4100);
@@ -71,18 +70,8 @@ export function IntroLoader() {
         <div
           className="intro-loader"
           key={run}
-          ref={overlayRef}
-          tabIndex={-1}
           data-exiting={exiting ? "true" : undefined}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Flat Hack 604 opening animation"
-          onKeyDown={(event) => {
-            if (event.key === "Tab") {
-              event.preventDefault();
-              overlayRef.current?.focus();
-            }
-          }}
+          aria-hidden="true"
         >
           <div className="intro-lockup" aria-hidden="true">
             <span className="intro-left">Flat</span>
@@ -101,7 +90,7 @@ export function IntroLoader() {
                 />
               ))}
             </div>
-            <span className="intro-right">Hack 604</span>
+            <span className="intro-right">Hack 605</span>
           </div>
         </div>
       )}

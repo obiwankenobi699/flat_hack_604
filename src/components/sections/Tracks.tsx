@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { tracks } from "@/content/home";
+import { challengeSteps } from "@/content/home";
 
 const trackImages = [
   "/assets/track-creative-arena.png",
@@ -11,20 +11,14 @@ const trackImages = [
   "/assets/track-trajectories.png",
 ];
 
-const trackPrompts = [
-  "Find one frustrating workflow, remove a real point of friction, and leave with a prototype someone can use immediately.",
-  "Turn an unexpected interaction into a playful build without losing clarity, accessibility, or purpose.",
-  "Bring the question that does not fit a category, test the riskiest assumption, and make the learning visible.",
-  "Pair unlike skills, share ownership early, and prove that the strongest result could only come from this team.",
-];
-
 export function Tracks() {
   const [activeTrack, setActiveTrack] = useState<number | null>(null);
 
   return (
-    <section className="tracks section section-teal" id="tracks" aria-labelledby="tracks-title">
+    <section className="tracks section section-teal" id="challenge" aria-labelledby="tracks-title">
+      <div className="tracks-heading"><p className="section-kicker">THE CHALLENGE</p><h2 id="tracks-title">Can you make something people will pay for?</h2><p>Open each stage to see what counts.</p></div>
       <div className="track-list">
-        {tracks.map((track, index) => (
+        {challengeSteps.map((track, index) => (
           <button
             className="track-row"
             type="button"
@@ -43,14 +37,13 @@ export function Tracks() {
               <span className="track-row__hint">{activeTrack === index ? "Close the brief" : "Open the brief"}</span>
             </span>
             <span className="track-row__detail" id={`track-detail-${track.number}`} aria-hidden={activeTrack !== index}>
-              <span>{trackPrompts[index]}</span>
+              <span>{track.prompt}</span>
               <span className="track-row__detail-note">{track.copy}</span>
             </span>
             <span className="track-arrow" aria-hidden="true">{activeTrack === index ? "×" : "↗"}</span>
           </button>
         ))}
       </div>
-      <h2 id="tracks-title" className="sr-only">Choose a direction</h2>
     </section>
   );
 }
